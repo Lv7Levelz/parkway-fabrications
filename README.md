@@ -30,3 +30,6 @@ Before production handover:
 
 ## Source note
 Business/service information was reconstructed from publicly indexed Parkway Fabrications website content and public business listings. The live source website did not expose its original image files to the available crawler, so this concept uses original custom industrial SVG artwork rather than copying unrelated third-party photography.
+
+## Professional refinement
+Visual system updated to a restrained executive-industrial style: subtler animations, stronger typography, cleaner hierarchy, reduced glow effects and more credible procurement-facing presentation.
