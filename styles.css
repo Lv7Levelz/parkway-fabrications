@@ -161,3 +161,60 @@ footer p{font-size:.84rem;line-height:1.6}
   .footer-grid{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:8px}
 }
+
+
+/* Premium product imagery + futuristic content system */
+.product-visual{
+  position:relative;overflow:hidden;background:#07131d;
+}
+.product-visual img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .45s ease,filter .45s ease;
+  filter:saturate(.95) contrast(1.05);
+}
+.product-visual:after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 58%,rgba(7,19,29,.55));
+  pointer-events:none;
+}
+.cap-card:hover .product-visual img,.product-showcase:hover img{transform:scale(1.035)}
+.future-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.67rem;letter-spacing:.16em;text-transform:uppercase;font-weight:900;
+  color:#1688ff;margin-bottom:10px
+}
+.future-label:before{
+  content:"";width:22px;height:2px;background:#1688ff;box-shadow:0 0 12px rgba(22,136,255,.5)
+}
+.product-showcase{
+  display:grid;grid-template-columns:1fr 1fr;min-height:420px;
+  border:1px solid #d7e0e5;background:#fff;overflow:hidden;margin-bottom:22px
+}
+.product-showcase:nth-child(even) .product-showcase-media{order:2}
+.product-showcase-media{min-height:390px;overflow:hidden;background:#07131d}
+.product-showcase-media img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.product-showcase-copy{padding:42px;display:flex;flex-direction:column;justify-content:center}
+.product-showcase-copy h2{font-size:clamp(2rem,3.5vw,3.35rem);margin-bottom:14px}
+.product-showcase-copy p{color:#60717c;line-height:1.7}
+.spec-strip{display:flex;gap:10px;flex-wrap:wrap;margin:17px 0 24px}
+.spec-pill{
+  padding:8px 10px;border:1px solid #d6e0e5;background:#f7fafb;
+  color:#32424b;font-size:.72rem;font-weight:750
+}
+.futuristic-heading{
+  letter-spacing:-.055em;text-transform:uppercase;
+}
+.futuristic-heading .blue{
+  text-shadow:0 0 25px rgba(22,136,255,.13)
+}
+.cap-card .product-visual{height:176px}
+.cap-card .product-visual img{height:100%}
+@media(max-width:900px){
+  .product-showcase{grid-template-columns:1fr}
+  .product-showcase:nth-child(even) .product-showcase-media{order:0}
+  .product-showcase-media{min-height:300px}
+}
+@media(max-width:650px){
+  .product-showcase-copy{padding:28px 22px}
+  .product-showcase-media{min-height:240px}
+}
