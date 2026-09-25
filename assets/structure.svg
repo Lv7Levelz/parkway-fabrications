@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Welding and fabrication">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Structural steel fabrication">
 <defs>
   <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
     <stop stop-color="#0a141d"/><stop offset="1" stop-color="#102434"/>
@@ -14,10 +14,10 @@
 <rect width="1600" height="1000" fill="url(#bg)"/>
 <rect width="1600" height="1000" fill="url(#grid)"/>
 
-<path d="M330 760L650 280h160l360 480" fill="none" stroke="url(#steel)" stroke-width="64"/>
-<path d="M260 760h1040" stroke="#5a6f7a" stroke-width="46"/>
-<circle cx="735" cy="465" r="32" fill="#fff"/>
-<circle cx="735" cy="465" r="140" fill="#2f9bff" opacity=".25" filter="url(#glow)"/>
-<path d="M735 465L320 250M735 465L270 500M735 465L430 820M735 465L750 850M735 465L1040 810M735 465L1240 560" stroke="url(#hot)" stroke-width="8" stroke-linecap="round"/>
+<path d="M180 840h1240" stroke="#334854" stroke-width="26"/>
+<path d="M260 840V190M650 840V340M980 840V170M1330 840V370" stroke="url(#steel)" stroke-width="34"/>
+<path d="M245 220l760-28M650 360l700 35M260 560l1080-20" stroke="#7f929e" stroke-width="28"/>
+<path d="M1040 840V520h250v320" fill="none" stroke="#2f9bff" stroke-width="24"/>
+<path d="M1040 520l125-165 125 165" fill="none" stroke="#2f9bff" stroke-width="24"/>
 
 </svg>

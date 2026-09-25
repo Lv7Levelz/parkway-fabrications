@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Welding and fabrication">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Fibre laser cutting">
 <defs>
   <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
     <stop stop-color="#0a141d"/><stop offset="1" stop-color="#102434"/>
@@ -14,10 +14,18 @@
 <rect width="1600" height="1000" fill="url(#bg)"/>
 <rect width="1600" height="1000" fill="url(#grid)"/>
 
-<path d="M330 760L650 280h160l360 480" fill="none" stroke="url(#steel)" stroke-width="64"/>
-<path d="M260 760h1040" stroke="#5a6f7a" stroke-width="46"/>
-<circle cx="735" cy="465" r="32" fill="#fff"/>
-<circle cx="735" cy="465" r="140" fill="#2f9bff" opacity=".25" filter="url(#glow)"/>
-<path d="M735 465L320 250M735 465L270 500M735 465L430 820M735 465L750 850M735 465L1040 810M735 465L1240 560" stroke="url(#hot)" stroke-width="8" stroke-linecap="round"/>
+<rect x="120" y="650" width="1360" height="210" rx="24" fill="#20303a"/>
+<g opacity=".36" stroke="#617783" stroke-width="11">
+<path d="M160 690h1280M160 748h1280M160 806h1280"/>
+</g>
+<rect x="270" y="385" width="1080" height="280" rx="22" fill="url(#steel)" transform="skewX(-5)"/>
+<path d="M820 90v400" stroke="#ebfbff" stroke-width="9"/>
+<path d="M820 180v310" stroke="#168dff" stroke-width="34" opacity=".25" filter="url(#glow)"/>
+<circle cx="820" cy="490" r="34" fill="#fff"/>
+<circle cx="820" cy="490" r="125" fill="#ff7300" opacity=".35" filter="url(#glow)"/>
+<path d="M820 490L480 760M820 490L670 800M820 490L850 810M820 490L1090 770M820 490L1290 620" stroke="url(#hot)" stroke-width="8" stroke-linecap="round"/>
+<g fill="none" stroke="#1b2932" stroke-width="16">
+<circle cx="520" cy="520" r="70"/><rect x="1000" y="455" width="170" height="120"/><path d="M650 600h230"/>
+</g>
 
 </svg>
