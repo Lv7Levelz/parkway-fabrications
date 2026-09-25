@@ -218,3 +218,34 @@ footer p{font-size:.84rem;line-height:1.6}
   .product-showcase-copy{padding:28px 22px}
   .product-showcase-media{min-height:240px}
 }
+
+
+/* Homepage high-resolution image pass */
+.hero-media img{
+  object-position:center 48%;
+  filter:saturate(.98) contrast(1.06) brightness(.94);
+}
+.sector{
+  background:#0a1a27;
+}
+.sector img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  filter:saturate(.9) brightness(.66) contrast(1.08);
+  transition:transform .45s ease,filter .45s ease;
+}
+.sector:hover img{
+  transform:scale(1.055);
+  filter:saturate(1) brightness(.75) contrast(1.08);
+}
+.bespoke-media img{
+  min-height:100%;
+  object-fit:cover;
+}
+.project img{
+  filter:saturate(.92) contrast(1.05);
+  transition:transform .35s ease;
+}
+.project:hover img{transform:scale(1.04)}
