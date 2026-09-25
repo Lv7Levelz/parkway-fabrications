@@ -1,6 +1,7 @@
-# Parkway Fabrications concept site
+# Parkway Fabrications reference-image concept
 
-A GitHub Pages-ready website inspired by the supplied design reference.
+This version uses image crops taken directly from the website screenshot supplied by the user.
+No AI-generated industrial artwork is used for the hero, capability, sector, bespoke or project imagery.
 
 ## Pages
 - Home
@@ -11,7 +12,8 @@ A GitHub Pages-ready website inspired by the supplied design reference.
 - Contact
 - 404
 
-## Notes
-- The demo is set to `noindex,nofollow` and robots.txt blocks crawling, so it does not compete with a live client website.
-- The industrial visuals are custom SVG artwork included in `/assets`.
-- Before production, verify Parkway's live phone/email/address and replace the concept project visuals with approved client photography if desired.
+## Important
+This is a presentation/demo build. The screenshot-derived images are limited by the source screenshot resolution.
+For a final client production version, replace them with the original high-resolution source photographs supplied/approved by Parkway Fabrications.
+
+The demo remains `noindex,nofollow` and `robots.txt` blocks crawling.
