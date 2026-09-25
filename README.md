@@ -1,19 +1,12 @@
-# Parkway Fabrications reference-image concept
+# Parkway Fabrications — fixed GitHub upload build
 
-This version uses image crops taken directly from the website screenshot supplied by the user.
-No AI-generated industrial artwork is used for the hero, capability, sector, bespoke or project imagery.
+This build is intentionally FLAT: all HTML, CSS, JS and image files sit in the repository root.
 
-## Pages
-- Home
-- Services
-- Sectors
-- Our Work
-- About
-- Contact
-- 404
+Why: the previous live build had HTML paths such as `assets/cap-laser.jpg`, while the JPGs had been uploaded into the GitHub repository root. That caused the broken images visible on the live site.
 
-## Important
-This is a presentation/demo build. The screenshot-derived images are limited by the source screenshot resolution.
-For a final client production version, replace them with the original high-resolution source photographs supplied/approved by Parkway Fabrications.
+## Upload
+Extract the ZIP and upload EVERYTHING inside it together to the root of the GitHub repository.
+You do not need to create an `assets` folder.
 
-The demo remains `noindex,nofollow` and `robots.txt` blocks crawling.
+## Demo safety
+This is still a presentation/demo build and remains noindex.
