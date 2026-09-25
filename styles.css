@@ -249,3 +249,11 @@ footer p{font-size:.84rem;line-height:1.6}
   transition:transform .35s ease;
 }
 .project:hover img{transform:scale(1.04)}
+
+.map-embed{
+  overflow:hidden;
+  border:1px solid #d7e0e5;
+  background:#07131d;
+  box-shadow:0 18px 45px rgba(11,29,42,.12);
+}
+.map-embed iframe{display:block}
