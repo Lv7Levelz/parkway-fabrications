@@ -258,32 +258,5 @@ footer p{font-size:.84rem;line-height:1.6}
 }
 .map-embed iframe{display:block}
 
-/* Buyer-focused service content */
-.content-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:46px;align-items:start}
-.prose{max-width:780px}.prose h2{font-size:clamp(1.9rem,3vw,3rem);margin:36px 0 14px}.prose h2:first-child{margin-top:0}
-.prose h3{font-size:1.18rem;margin:26px 0 8px}.prose p,.prose li{color:#50616b;line-height:1.72}
-.prose a:not(.btn),.context-links a{color:#0878de;text-decoration:underline;text-underline-offset:3px}
-.quote-panel{position:sticky;top:110px;padding:28px;background:#07131d;color:#fff;border-top:4px solid var(--blue)}
-.quote-panel h2{font-size:1.65rem;line-height:1.08}.quote-panel p{color:#b9c7cf;line-height:1.65}.quote-panel .btn{width:100%;margin-top:10px}
-.spec-table{width:100%;border-collapse:collapse;margin:22px 0 30px;font-size:.92rem}
-.spec-table th,.spec-table td{padding:13px 14px;text-align:left;vertical-align:top;border:1px solid #d9e2e7}
-.spec-table th{width:31%;background:#f2f6f8;color:#263842}.spec-table td{color:#53636c}
-.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;counter-reset:steps;margin-top:26px}
-.process-step{counter-increment:steps;border:1px solid #d7e0e5;padding:22px;background:#fff}
-.process-step:before{content:"0" counter(steps);display:block;color:var(--blue);font-size:.72rem;font-weight:900;letter-spacing:.12em;margin-bottom:18px}
-.process-step h3{font-size:1rem;margin-bottom:8px}.process-step p{font-size:.84rem;line-height:1.6;color:#60717c;margin:0}
-.faq-list{display:grid;gap:10px;margin-top:24px}.faq-list details{border:1px solid #d7e0e5;background:#fff;padding:0 20px}
-.faq-list summary{cursor:pointer;font-weight:800;padding:18px 32px 18px 0;position:relative}.faq-list summary:after{content:"+";position:absolute;right:0;color:var(--blue)}
-.faq-list details[open] summary:after{content:"−"}.faq-list details p{color:#586972;line-height:1.65;padding:0 0 18px;margin:0;max-width:850px}
-.context-links{padding:24px;border-left:3px solid var(--blue);background:#f2f6f8;color:#50616b;line-height:1.7}
-.breadcrumb a{color:#9fcfff}.breadcrumb{font-size:.78rem;color:#aabac4;margin-bottom:20px}
-.confirmation-note{font-size:.78rem;color:#7a8991;margin-top:12px}
-@media(max-width:900px){.content-grid{grid-template-columns:1fr}.quote-panel{position:relative;top:auto}.process-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.process-grid{grid-template-columns:1fr}.spec-table th,.spec-table td{display:block;width:100%}.spec-table th{border-bottom:0}}
-/* Functional RFQ states; follows the existing form visual language. */
-.hp-field{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
-.consent{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:10px;color:#52636c;font-size:.78rem;line-height:1.55;margin:2px 0}
-.consent input{width:auto;margin-top:3px}.consent a{color:#0878de;text-decoration:underline}
-.form-status{min-height:1.3em;margin:0;color:#a61919;font-size:.84rem}.form-status.success{color:#176c3a}
-.form button[disabled]{opacity:.65;cursor:wait}.quote-success{border-top:4px solid var(--blue);padding:26px;background:#f3f6f8}.quote-success h2{font-size:2rem;margin-bottom:14px}.quote-success p{color:#50616b;line-height:1.65}
-#whatsapp-contact{margin-top:12px;width:max-content}
+/* Backend form controls only; original site styles above are unchanged. */
+#quote-form input[type="checkbox"]{width:auto}#quote-form [hidden]{display:none!important}

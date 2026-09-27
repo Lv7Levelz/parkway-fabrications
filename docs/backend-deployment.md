@@ -4,7 +4,7 @@
 
 The approved static frontend remains framework-free. Only `contact.html` loads the small RFQ integration in `script.js`; no admin code is shipped on public pages. A Node 20 HTTP API is deployed on Render. It talks to Supabase REST, Auth and a **private** Storage bucket with the service-role key, which never enters browser code. Resend sends transactional mail. Cloudflare Turnstile protects public submissions. The admin application is served by the API at `/admin/`, authenticates against Supabase Auth, and uses signed, `HttpOnly`, `SameSite=Strict`, production-secure cookies.
 
-The API always returns `X-Robots-Tag: noindex, nofollow`. Static staging builds replace public robots metadata with `noindex,nofollow` and block crawling. A production build requires an explicit approval flag.
+The API always returns `X-Robots-Tag: noindex, nofollow`. Source and staging builds use `noindex,nofollow` and block crawling; the production build explicitly changes this only after approval. A production build requires an explicit approval flag.
 
 ## Local development
 
@@ -17,7 +17,7 @@ The API always returns `X-Robots-Tag: noindex, nofollow`. Static staging builds 
 ## Supabase database and private storage
 
 1. Create separate Supabase projects for staging and production.
-2. Apply `202609270001_initial_rfq.sql`, then `202609270002_retention.sql`.
+2. Apply `202609270001_initial_rfq.sql`, then `202609270002_retention.sql`, then `202609270003_finalize_enquiries.sql` before deploying this server version.
 3. Confirm `enquiries`, `enquiry_files`, `enquiry_audit` and `notification_jobs` have RLS enabled and no policies accessible to `anon` or ordinary `authenticated` users.
 4. In Storage, confirm bucket `rfq-private` exists, **Public bucket is off**, the 10 MB object limit is present and no public read policy exists. If a different bucket name is required, change the migration bucket id and `SUPABASE_STORAGE_BUCKET` together before deployment.
 5. The `create_enquiry` RPC obtains references from a PostgreSQL sequence inside the insert. The unique constraint is the final guard. PostgreSQL sequences do not roll back, so a failed/deleted enquiry cannot cause a reference to be reused.
@@ -44,7 +44,7 @@ where email = 'approved-admin@example.com';
 2. Create a restricted production API key and set `RESEND_API_KEY` only in Render.
 3. Set `EMAIL_FROM` to the verified sender and `NOTIFICATION_EMAIL` to the Parkway mailbox that receives RFQs.
 4. Submit a test RFQ and verify both the customer confirmation and Parkway notification. The email contains no storage URL; the Parkway message links to authenticated admin.
-5. Failed sends remain in `notification_jobs` as `RETRY`. The in-process worker atomically claims due jobs and retries them. For multi-instance scale, move the same claim RPC to a dedicated Render worker or scheduled job.
+5. Failed sends remain in `notification_jobs` as `RETRY`. After file storage, `complete_enquiry` finalises receipt and inserts notification jobs atomically. Only the in-process worker claims and sends jobs; the HTTP handler never sends them. Provider requests carry a stable job-based idempotency key to reduce duplicate sends on retries. If finalisation fails, the API returns an error and the unfinished record needs operator investigation. For multi-instance scale, move the same claim RPC to a dedicated Render worker or scheduled job.
 
 ## Cloudflare Turnstile
 
@@ -67,7 +67,7 @@ where email = 'approved-admin@example.com';
 2. Preserve password/access controls on staging where the host supports them. Robots directives are not access control.
 3. After explicit launch approval, run `python scripts/build_frontend.py --mode production --approve-production-indexing --api-url https://PRODUCTION-API.example` and deploy only `dist/` to the production host.
 4. If frontend and API share an origin through a reverse proxy, use that origin for `apiBase` (or an empty value) and route `/api/*` to Render. Otherwise the explicit CORS origin must exactly match the static origin.
-5. Re-run `python scripts/seo_audit.py` against source and crawl the deployed result before switching DNS.
+5. Run `python scripts/seo_audit.py` on source (staging mode), then `python scripts/seo_audit.py --root dist --mode production` on an approved production build and crawl the deployed result before switching DNS.
 
 ## WhatsApp
 
@@ -91,4 +91,5 @@ See `.env.example`. `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`, `TURNSTILE_SE
 
 ## Not yet production-ready
 
-The code is ready for staging browser/backend testing, not a production-readiness claim. Production still requires real service provisioning, migration execution, storage/RLS inspection, administrator creation, sender-domain verification, Turnstile hostname configuration, end-to-end file tests, privacy/retention approval, monitoring/alerting, backup confirmation and a deployed security review. A malware scanner is an explicit future hook: new objects are isolated under the private `unscanned/` prefix, file rows have scan status fields, and downloads are forced as attachments, but content scanning and quarantine promotion are not yet connected. At larger scale, use Redis/managed edge rate limiting and a dedicated notification worker.
+The code is ready for staging browser/backend testing, not a production-readiness claim. Production still requires real service provisioning, migration execution, storage/RLS inspection, administrator creation, sender-domain verification, Turnstile hostname configuration, end-to-end file tests, privacy/retention approval, monitoring/alerting, backup confirmation and a deployed security review. A malware scanner is an explicit future hook: new objects are isolated under the private `unscanned/` prefix, file rows have scan status fields, and downloads are forced as attachments, but content scanning and quarantine promotion are not yet connected. Downloads now fail closed unless scan_status is CLEAN, including for administrators. Connect a trusted scanning/verifying service before enabling live drawing downloads; never automatically promote files just to make the button work. At larger scale, use Redis/managed edge rate limiting and a dedicated notification worker.
+

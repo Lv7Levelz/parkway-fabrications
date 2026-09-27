@@ -5,9 +5,11 @@ from pathlib import Path
 import json
 import re
 import sys
+from argparse import ArgumentParser
 import xml.etree.ElementTree as ET
 
-ROOT = Path(__file__).resolve().parents[1]
+parser=ArgumentParser();parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]);parser.add_argument('--mode',choices=['staging','production'],default='staging');args=parser.parse_args()
+ROOT = args.root
 PUBLIC = {p.name for p in ROOT.glob("*.html") if p.name not in {"404.html", "privacy.html"}}
 
 
@@ -53,7 +55,9 @@ for filename in sorted(PUBLIC):
     if page.h1 != 1: errors.append(f"{filename}: expected one H1; found {page.h1}")
     if len(page.canonical) != 1 or not page.canonical[0].startswith("https://www.parkwayfabrications.co.uk/"):
         errors.append(f"{filename}: invalid canonical")
-    if len(page.robots) != 1 or "noindex" in page.robots[0]: errors.append(f"{filename}: not indexable")
+    if len(page.robots) != 1: errors.append(f"{filename}: missing/duplicate robots")
+    elif args.mode == 'production' and 'noindex' in page.robots[0]: errors.append(f"{filename}: production is not indexable")
+    elif args.mode == 'staging' and 'noindex' not in page.robots[0]: errors.append(f"{filename}: staging is indexable")
     for image in page.images:
         if not image.get("alt"): errors.append(f"{filename}: image missing alt")
         if not image.get("width") or not image.get("height"): errors.append(f"{filename}: image missing dimensions")
@@ -78,9 +82,12 @@ sitemap = ET.parse(ROOT / "sitemap.xml")
 locs = {node.text.rsplit("/", 1)[-1] or "index.html" for node in sitemap.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
 if locs != PUBLIC: errors.append(f"sitemap mismatch: missing={sorted(PUBLIC-locs)}, extra={sorted(locs-PUBLIC)}")
 robots = (ROOT / "robots.txt").read_text()
-if "Disallow: /\n" in robots: errors.append("robots.txt blocks the whole site")
-if "Sitemap: https://www.parkwayfabrications.co.uk/sitemap.xml" not in robots: errors.append("robots.txt has no production sitemap")
+if args.mode == "production" and "Disallow: /\n" in robots: errors.append("robots.txt blocks the whole site")
+if args.mode == "production" and "Sitemap: https://www.parkwayfabrications.co.uk/sitemap.xml" not in robots: errors.append("robots.txt has no production sitemap")
+
+if args.mode == "staging" and "Disallow: /\n" not in robots: errors.append("staging robots.txt must block crawling")
 
 if errors:
     print("SEO audit failed:\n- " + "\n- ".join(errors)); sys.exit(1)
-print(f"SEO audit passed for {len(PUBLIC)} indexable pages: unique titles/descriptions/H1s, canonicals, sitemap, robots, images, links and JSON-LD syntax.")
+print(f"SEO audit passed for {len(PUBLIC)} {args.mode} pages: unique titles/descriptions/H1s, canonicals, sitemap, robots, images, links and JSON-LD syntax.")
+

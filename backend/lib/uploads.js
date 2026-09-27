@@ -16,34 +16,52 @@ const types = {
   }}
 };
 
-const dispositionName = (header, key) => {
-  const match = header.match(new RegExp(`${key}="([^"]*)"`, 'i'));
-  return match ? match[1] : null;
-};
-
 export function parseMultipart(buffer, contentType, config) {
-  const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
-  if (!boundaryMatch) throw Object.assign(new Error('Invalid multipart form'), { status: 400 });
-  const boundary = Buffer.from(`--${boundaryMatch[1] || boundaryMatch[2]}`);
-  const fields = {}, files = [];
-  let start = buffer.indexOf(boundary) + boundary.length;
-  while (start >= boundary.length) {
-    if (buffer.subarray(start, start + 2).equals(Buffer.from('--'))) break;
-    if (buffer.subarray(start, start + 2).equals(Buffer.from('\r\n'))) start += 2;
-    const headerEnd = buffer.indexOf(Buffer.from('\r\n\r\n'), start); if (headerEnd < 0) break;
-    const header = buffer.subarray(start, headerEnd).toString('utf8');
-    const next = buffer.indexOf(boundary, headerEnd + 4); if (next < 0) break;
-    const value = buffer.subarray(headerEnd + 4, next - 2);
-    const name = dispositionName(header, 'name'), filename = dispositionName(header, 'filename');
-    if (name && filename) {
-      const mime = (header.match(/content-type:\s*([^\r\n]+)/i)?.[1] || 'application/octet-stream').trim().toLowerCase();
-      files.push(validateUpload({ originalFilename: filename, declaredMime: mime, buffer: value }, config));
-    } else if (name) fields[name] = value.toString('utf8');
-    start = next + boundary.length;
+  const invalid = () => Object.assign(new Error('Invalid multipart form'), {status:400});
+  const match = contentType.match(/boundary=(?:"([^"\r\n]+)"|([^;\s]+))/i);
+  const value = match?.[1] || match?.[2];
+  if (!value || value.length > 70) throw invalid();
+  const boundary = Buffer.from('--' + value), delimiter = Buffer.from('\r\n--' + value);
+  const crlf = Buffer.from('\r\n'), close = Buffer.from('--');
+  if (!buffer.subarray(0, boundary.length).equals(boundary)) throw invalid();
+  const fields = Object.create(null), files = [];
+  let offset = boundary.length;
+  for (;;) {
+    if (buffer.subarray(offset,offset+2).equals(close)) {
+      const rest=buffer.subarray(offset+2);
+      if (rest.length && !rest.equals(crlf)) throw invalid();
+      break;
+    }
+    if (!buffer.subarray(offset,offset+2).equals(crlf)) throw invalid();
+    const headerStart=offset+2, headerEnd=buffer.indexOf('\r\n\r\n',headerStart);
+    if (headerEnd<0 || headerEnd-headerStart>16384) throw invalid();
+    const header=buffer.subarray(headerStart,headerEnd).toString('utf8');
+    const disposition=header.match(/^content-disposition:\s*form-data;([^\r\n]*)/im)?.[1];
+    const parameter=key=>disposition?.match(new RegExp('(?:^|;)\\s*'+key+'="([^"\\r\\n]*)"','i'))?.[1];
+    const name=parameter('name'), filename=parameter('filename');
+    if (!name) throw invalid();
+    let next=headerEnd+4;
+    for (;;) {
+      next=buffer.indexOf(delimiter,next);
+      if (next<0) throw invalid();
+      const suffix=buffer.subarray(next+delimiter.length,next+delimiter.length+2);
+      if (suffix.equals(crlf) || suffix.equals(close)) break;
+      next+=delimiter.length;
+    }
+    const bytes=buffer.subarray(headerEnd+4,next);
+    if (filename !== undefined && (filename || bytes.length)) {
+      if (name!=='drawings') throw Object.assign(new Error('Unexpected upload field'),{status:400});
+      const declaredMime=header.match(/^content-type:\s*([^\r\n]+)/im)?.[1].trim().toLowerCase() || 'application/octet-stream';
+      files.push(validateUpload({originalFilename:filename,declaredMime,buffer:bytes},config));
+    } else if (filename === undefined) {
+      if (Object.hasOwn(fields,name)) throw Object.assign(new Error('Duplicate form field'),{status:400});
+      fields[name]=bytes.toString('utf8');
+    }
+    offset=next+delimiter.length;
   }
-  if (files.length > config.maxFiles) throw Object.assign(new Error(`A maximum of ${config.maxFiles} files is allowed`), { status: 413 });
-  if (files.reduce((sum, file) => sum + file.sizeBytes, 0) > config.maxTotalBytes) throw Object.assign(new Error('The total upload size is too large'), { status: 413 });
-  return { fields, files };
+  if (files.length > config.maxFiles) throw Object.assign(new Error(`A maximum of ${config.maxFiles} files is allowed`), {status:413});
+  if (files.reduce((sum,file)=>sum+file.sizeBytes,0)>config.maxTotalBytes) throw Object.assign(new Error('The total upload size is too large'),{status:413});
+  return {fields,files};
 }
 
 export function validateUpload(file, config) {
@@ -58,3 +76,4 @@ export function validateUpload(file, config) {
   return { originalFilename, storageFilename, extension: extension.slice(1), mimeType: rule.mime, sizeBytes: file.buffer.length, buffer: file.buffer };
 }
 export const allowedExtensions = Object.keys(types).map((value) => value.slice(1));
+

@@ -31,8 +31,8 @@ export function createApp({ config, database, emails, fetchImpl=fetch, now=()=>D
 
   return createServer(async(request,response)=>{
     Object.entries(securityHeaders).forEach(([key,value])=>response.setHeader(key,value));if(config.isProduction)response.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');
-    const url=new URL(request.url,config.appUrl||'http://localhost');
     try {
+      const url=new URL(request.url,config.appUrl||'http://localhost');
       if(request.method==='OPTIONS'){if(!cors(request,response))return json(response,403,{error:'Origin not allowed'});response.writeHead(204);return response.end();}
       if(url.pathname==='/api/health'&&request.method==='GET')return json(response,200,{ok:true});
       if(url.pathname==='/api/public-config'&&request.method==='GET'){
@@ -45,14 +45,15 @@ export function createApp({ config, database, emails, fetchImpl=fetch, now=()=>D
         if(!cors(request,response))return json(response,403,{error:'Origin not allowed'});
         if(rateLimit(request,'rfq',5,15*60*1000))return json(response,429,{error:'Too many submissions. Please try again later.'},{'Retry-After':'900'});
         const type=request.headers['content-type']||'';if(!type.startsWith('multipart/form-data'))return json(response,415,{error:'Use multipart form data'});
-        const body=await readBody(request,config.maxTotalBytes+2*1024*1024),{fields,files}=parseMultipart(body,type,config);
+        const body=await readBody(request,config.maxTotalBytes+2*1024*1024),{fields,files}=await parseMultipart(body,type,config);
         if(fields.website) return json(response,200,{received:true});
         if(config.turnstileSecretKey){const verifyBody=new URLSearchParams({secret:config.turnstileSecretKey,response:fields['cf-turnstile-response']||'',remoteip:clientIp(request)});const verify=await fetchImpl('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:verifyBody});const result=await verify.json();if(!result.success)return json(response,400,{error:'Security verification failed'});}
         const data=validateEnquiry(fields),created=await database.createEnquiry(data),paths=[];
         try {for(const file of files){const path=`unscanned/${created.id}/${file.storageFilename}`;await database.uploadFile(path,file);paths.push(path);await database.createFileRecord(created.id,path,file);}}
         catch(error){await database.deleteFiles(paths).catch(()=>{});await database.deleteEnquiry(created.id).catch(()=>{});throw Object.assign(new Error('Files could not be stored. Please try again.'),{status:503,cause:error});}
-        const jobs=await database.queueEmails(created.id).catch((error)=>{safeLog('notification_queue_failed',{enquiryId:created.id,message:error.message});return[];});
-        emails.deliverJobs({...data,...created,fileCount:files.length},jobs).catch((error)=>safeLog('notification_delivery_failed',{enquiryId:created.id,message:error.message}));
+        // Finalisation and queue insertion share a database transaction. Only the
+        // worker sends email after atomically claiming a job.
+        await database.completeEnquiry(created.id);
         safeLog('enquiry_created',{enquiryId:created.id,reference:created.reference,fileCount:files.length});
         return json(response,201,{reference:created.reference,summary:{service:data.service,requiredDate:data.required_date,fileCount:files.length}});
       }
@@ -74,7 +75,7 @@ export function createApp({ config, database, emails, fetchImpl=fetch, now=()=>D
         if(enquiryMatch&&request.method==='GET'){const data=await database.getEnquiry(enquiryMatch[1]);return data?json(response,200,{enquiry:data}):json(response,404,{error:'Enquiry not found'});}
         if(enquiryMatch&&request.method==='PATCH'){if(!csrfValid(request))return json(response,403,{error:'CSRF check failed'});const input=JSON.parse((await readBody(request)).toString()||'{}'),status=validateStatus(input.status);await database.updateStatus(enquiryMatch[1],status,user.id);return json(response,200,{status});}
         const fileMatch=url.pathname.match(/^\/admin\/api\/files\/([0-9a-f-]+)\/download$/i);
-        if(fileMatch&&request.method==='GET'){const file=await database.getFile(fileMatch[1]);if(!file)return json(response,404,{error:'File not found'});const content=await database.downloadFile(file.storage_path);response.writeHead(200,{'Content-Type':file.mime_type,'Content-Length':content.length,'Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(file.original_filename)}`,'Cache-Control':'private, no-store'});return response.end(content);}
+        if(fileMatch&&request.method==='GET'){const file=await database.getFile(fileMatch[1]);if(!file)return json(response,404,{error:'File not found'});if(file.scan_status!=='CLEAN')return json(response,423,{error:'This drawing is not cleared for download'});const content=await database.downloadFile(file.storage_path);response.writeHead(200,{'Content-Type':file.mime_type,'Content-Length':content.length,'Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(file.original_filename)}`,'Cache-Control':'private, no-store'});return response.end(content);}
         return json(response,404,{error:'Not found'});
       }
       if(url.pathname==='/admin'||url.pathname==='/admin/')url.pathname='/admin/index.html';
@@ -83,3 +84,4 @@ export function createApp({ config, database, emails, fetchImpl=fetch, now=()=>D
     } catch(error) { if(!response.headersSent)handleError(error,response); }
   });
 }
+

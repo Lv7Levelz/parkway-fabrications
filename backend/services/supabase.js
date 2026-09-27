@@ -28,7 +28,7 @@ export class SupabaseService {
     const rows = await this.request('/rest/v1/enquiry_files', { method:'POST', headers:{'Content-Type':'application/json',Prefer:'return=representation'}, body:JSON.stringify({ enquiry_id:enquiryId, original_filename:file.originalFilename, storage_filename:file.storageFilename, mime_type:file.mimeType, extension:file.extension, size_bytes:file.sizeBytes, storage_path:path }) });
     return rows[0];
   }
-  async queueEmails(enquiryId) { return this.request('/rest/v1/rpc/queue_enquiry_notifications', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({p_enquiry_id:enquiryId}) }); }
+  async completeEnquiry(enquiryId) { return this.request('/rest/v1/rpc/complete_enquiry', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({p_enquiry_id:enquiryId}) }); }
   async claimNotifications(limit=20) { return this.request('/rest/v1/rpc/claim_notification_jobs', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({p_limit:limit}) }); }
   async updateNotification(id, update) { return this.request(`/rest/v1/notification_jobs?id=eq.${encodeURIComponent(id)}`, {method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(update)}); }
   async listEnquiries({ search='', status='', service='', direction='desc' }) {
@@ -61,3 +61,4 @@ export class SupabaseService {
     if(!response.ok) return null; return response.json();
   }
 }
+

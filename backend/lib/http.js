@@ -10,10 +10,10 @@ export const readBody = (request, limit = 1024 * 1024) => new Promise((resolve, 
   const chunks = []; let size = 0;
   request.on('data', (chunk) => {
     size += chunk.length;
-    if (size > limit) { reject(Object.assign(new Error('Request too large'), { status: 413 })); request.destroy(); return; }
+    if (size > limit) { chunks.length = 0; return; }
     chunks.push(chunk);
   });
-  request.on('end', () => resolve(Buffer.concat(chunks)));
+  request.on('end', () => size > limit ? reject(Object.assign(new Error('Request too large'), {status:413})) : resolve(Buffer.concat(chunks)));
   request.on('error', reject);
 });
 
@@ -37,3 +37,4 @@ export const unsign = (signed, secret) => {
 };
 export const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, (char) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[char]);
 export const safeLog = (event, detail = {}) => console.log(JSON.stringify({ level: 'info', event, at: new Date().toISOString(), ...detail }));
+

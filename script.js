@@ -22,7 +22,8 @@ if(form){
     try{
       const response=await fetch(`${apiBase}/api/enquiries`,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}}),data=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(data.error||'The enquiry could not be sent. Please try again.');
-      form.hidden=true;$('#enquiry-reference').textContent=data.reference;const success=$('#quote-success');success.hidden=false;success.focus();
-    }catch(error){showError(error.message||'The enquiry could not be sent. Please try again.');button.disabled=false;button.textContent='Send Secure Enquiry →';window.turnstile?.reset();}
+      if(!data.reference)throw new Error('The enquiry could not be confirmed. Please contact Parkway.');form.reset();status.textContent=`Thank you. Your enquiry reference is ${data.reference}. Keep this for your records.`;status.classList.add('success');button.disabled=false;button.textContent='Send Enquiry →';window.turnstile?.reset();
+    }catch(error){showError(error.message||'The enquiry could not be sent. Please try again.');button.disabled=false;button.textContent='Send Enquiry →';window.turnstile?.reset();}
   });
 }
+

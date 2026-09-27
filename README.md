@@ -9,10 +9,7 @@ Extract the ZIP and upload EVERYTHING inside it together to the root of the GitH
 You do not need to create an `assets` folder.
 
 ## Search visibility
-The public pages are configured for production indexing on
-`https://www.parkwayfabrications.co.uk/`. Utility pages remain `noindex`.
-Before deploying to any preview or staging hostname, protect that environment
-at the server level and do not expose the production sitemap there.
+Source and staging pages remain `noindex`; source robots.txt blocks crawling. Use the staging build by default. Only an explicitly approved production build enables indexing on `https://www.parkwayfabrications.co.uk/`. Utility pages remain `noindex`. Deploy only the generated `dist/` directory.
 
 
 ## Live-domain transition
@@ -38,8 +35,17 @@ scripts/seo_audit.py` after every content or template change.
 
 ## RFQ backend and administration
 
-The production RFQ API, private upload flow and protected administration are in
+The staging RFQ API, private upload flow and protected administration are in
 `backend/`; database and storage migrations are in `supabase/migrations/`.
 See [`docs/backend-deployment.md`](docs/backend-deployment.md) for the complete
 local, staging and production deployment runbook. No service credentials belong
 in this repository; copy `.env.example` locally and use host-managed secrets.
+
+
+## Preservation and backend fixes
+
+The public presentation is based on main at `a58114dd04bceb1a0ff602cb6c7e9cba935f839e`: original public page bodies and CSS are retained. Visible exceptions are the functional enquiry form (drawings, privacy acknowledgement, security challenge and status feedback) and an accurate staging privacy notice. Metadata and image dimensions do not change the intended presentation.
+
+Apply migration `202609270003_finalize_enquiries.sql` before starting this server version. RFQs are finalised and notifications queued in one transaction; only the worker sends claimed jobs. Failed finalisation returns an error and leaves the record for operator investigation rather than falsely reporting receipt. Downloads require scan status `CLEAN`; no scanner is yet connected, so new drawings deliberately remain unavailable to download. Do not mark files clean without a trusted scanner/verifier.
+
+Run `npm test` and `npm run check`. Build staging with `python3 scripts/build_frontend.py --mode staging --api-url https://YOUR-STAGING-API`, then audit it with `python3 scripts/seo_audit.py --root dist --mode staging`. Actual service configuration, migration execution, scanner integration and deployed browser testing are still required before launch.
