@@ -40,10 +40,11 @@ class PageParser(HTMLParser):
         if self._in_title: self.title += data
 
 
-errors, titles, descriptions = [], {}, {}
+errors, titles, descriptions, pages = [], {}, {}, {}
 for filename in sorted(PUBLIC):
     source = (ROOT / filename).read_text()
     page = PageParser(); page.feed(source)
+    pages[filename] = page
     for label, value in (("title", page.title.strip()), ("description", page.description[0] if len(page.description) == 1 else "")):
         if not value: errors.append(f"{filename}: missing/duplicate {label}")
         seen = titles if label == "title" else descriptions
@@ -63,6 +64,15 @@ for filename in sorted(PUBLIC):
     for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', source, re.S):
         try: json.loads(block)
         except json.JSONDecodeError as exc: errors.append(f"{filename}: invalid JSON-LD ({exc})")
+
+inbound = {name: 0 for name in PUBLIC}
+for source_name, page in pages.items():
+    for href in page.links:
+        target = href.split("?", 1)[0].split("#", 1)[0]
+        if not target: target = source_name
+        if target in inbound and target != source_name: inbound[target] += 1
+for filename, count in inbound.items():
+    if filename != "index.html" and count == 0: errors.append(f"{filename}: orphaned from public HTML pages")
 
 sitemap = ET.parse(ROOT / "sitemap.xml")
 locs = {node.text.rsplit("/", 1)[-1] or "index.html" for node in sitemap.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}

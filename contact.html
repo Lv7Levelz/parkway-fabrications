@@ -75,51 +75,37 @@
 <strong>Location</strong>
 <br>
 <a href="https://www.google.com/maps/search/?api=1&query=4+Colwall+Street,+Sheffield,+S9+3WP" target="_blank" rel="noopener">Open in Google Maps →</a>
+<a id="whatsapp-contact" class="btn btn-outline" href="#" hidden rel="noopener">Message Parkway on WhatsApp →</a>
 </p>
 </div>
 <div class="info-card">
-<form class="form" id="quote-form">
+<form class="form" id="quote-form" enctype="multipart/form-data">
 <div class="form-grid">
-<div class="field">
-<label for="name">Name</label>
-<input id="name" name="name" autocomplete="name" required>
+<div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" maxlength="120" required></div>
+<div class="field"><label for="company">Company</label><input id="company" name="company" autocomplete="organization" maxlength="160"></div>
+<div class="field"><label for="email">Email</label><input id="email" type="email" name="email" autocomplete="email" maxlength="254" required></div>
+<div class="field"><label for="phone">Telephone</label><input id="phone" name="phone" autocomplete="tel" maxlength="40"></div>
 </div>
-<div class="field">
-<label for="company">Company</label>
-<input id="company" name="company" autocomplete="organization">
+<div class="field"><label for="service">Service</label><select id="service" name="service" required><option>Laser cutting</option><option>CNC folding</option><option>Welding</option><option>Metal fabrication</option><option>Perforated metal fabrication</option><option>Granulator screen manufacture</option><option>Other</option></select></div>
+<div class="field"><label for="project_description">Project description</label><textarea id="project_description" name="project_description" maxlength="10000" required placeholder="Describe the component, assembly or replacement requirement"></textarea></div>
+<div class="form-grid">
+<div class="field"><label for="material">Material and grade</label><input id="material" name="material" maxlength="200"></div>
+<div class="field"><label for="thickness">Thickness</label><input id="thickness" name="thickness" maxlength="100"></div>
+<div class="field"><label for="quantity">Quantity</label><input id="quantity" name="quantity" maxlength="100"></div>
+<div class="field"><label for="dimensions">Overall dimensions</label><input id="dimensions" name="dimensions" maxlength="500"></div>
+<div class="field"><label for="finish">Finish</label><input id="finish" name="finish" maxlength="500"></div>
+<div class="field"><label for="tolerance">Critical tolerances</label><input id="tolerance" name="tolerance" maxlength="500"></div>
+<div class="field"><label for="required_date">Required date</label><input id="required_date" type="date" name="required_date"></div>
+<div class="field"><label for="urgency">Urgency</label><select id="urgency" name="urgency"><option value="">Select if applicable</option><option>Standard</option><option>Time-sensitive</option><option>Breakdown/replacement</option></select></div>
 </div>
-<div class="field">
-<label for="email">Email</label>
-<input id="email" type="email" name="email" autocomplete="email" required>
-</div>
-<div class="field">
-<label for="phone">Phone</label>
-<input id="phone" name="phone" autocomplete="tel">
-</div>
-</div>
-<div class="field">
-<label for="service">Service</label>
-<select id="service" name="service">
-<option>Laser cutting</option>
-<option>CNC folding</option>
-<option>Welding</option>
-<option>Metal fabrication</option>
-<option>Perforated metal fabrication</option>
-<option>Granulator screen manufacture</option>
-</select>
-</div>
-<div class="field">
-<label for="message">Project details</label>
-<textarea id="message" name="message" required placeholder="Material and grade, thickness, quantity, finish, critical dimensions and required date">
-</textarea>
-</div>
-<div class="field">
-<label for="drawing">Drawing for reference (DXF, STEP or PDF)</label>
-<input id="drawing" type="file" name="drawing" accept=".dxf,.step,.stp,.pdf,application/pdf">
-<p class="confirmation-note">This static form opens your email application. For privacy, the selected file is not uploaded here; attach it to the email that opens.</p>
-</div>
-<button class="btn btn-blue" type="submit">Create Email Enquiry →</button>
+<div class="field"><label for="drawings">Drawings and reference files</label><input id="drawings" type="file" name="drawings" multiple accept=".dxf,.dwg,.step,.stp,.pdf,.svg,.jpg,.jpeg,.png,application/pdf,image/svg+xml,image/jpeg,image/png"><p class="confirmation-note">DXF, DWG, STEP, STP, PDF, SVG, JPG or PNG. Up to 10 files, 10 MB each and 25 MB total. Files are transferred to private storage.</p></div>
+<div class="field hp-field" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+<div id="turnstile-container"></div>
+<label class="consent"><input type="checkbox" name="privacy_consent" required> I understand Parkway will use these details and files to assess and respond to this enquiry. Read the <a href="privacy.html">privacy notice</a>.</label>
+<p class="form-status" role="alert" aria-live="polite"></p>
+<button class="btn btn-blue" type="submit">Send Secure Enquiry →</button>
 </form>
+<div id="quote-success" class="quote-success" hidden tabindex="-1"><div class="kicker">Enquiry received</div><h2>Thank you.</h2><p>Your reference is <strong id="enquiry-reference"></strong>.</p><p>Keep this reference if you contact Parkway about your enquiry. Uploaded files remain private and are not linked from this page.</p></div>
 </div>
 </div>
 </section>

@@ -35,3 +35,11 @@ scripts/seo_audit.py` after every content or template change.
 - Parkway's current welding page states EN1090 coded welders.
 - Parkway also states that every weld receives a 100% post-weld quality check to meet ISO standards.
 - Do not add ISO 9001, CE/UKCA, ISO 3834 or other certification logos unless Parkway supplies current certificates.
+
+## RFQ backend and administration
+
+The production RFQ API, private upload flow and protected administration are in
+`backend/`; database and storage migrations are in `supabase/migrations/`.
+See [`docs/backend-deployment.md`](docs/backend-deployment.md) for the complete
+local, staging and production deployment runbook. No service credentials belong
+in this repository; copy `.env.example` locally and use host-managed secrets.
