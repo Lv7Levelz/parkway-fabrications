@@ -8,18 +8,26 @@ Why: the previous live build had HTML paths such as `assets/cap-laser.jpg`, whil
 Extract the ZIP and upload EVERYTHING inside it together to the root of the GitHub repository.
 You do not need to create an `assets` folder.
 
-## Demo safety
-This is still a presentation/demo build and remains noindex.
+## Search visibility
+The public pages are configured for production indexing on
+`https://www.parkwayfabrications.co.uk/`. Utility pages remain `noindex`.
+Before deploying to any preview or staging hostname, protect that environment
+at the server level and do not expose the production sitemap there.
 
 
 ## Live-domain transition
-This GitHub Pages build is a demo. At production handover:
+At production handover:
 - deploy to Parkway Fabrications' real domain;
 - preserve existing high-value URLs where possible;
 - 301 redirect any URLs that change;
 - update canonical URLs and sitemap.xml;
 - submit/verify the live property in Google Search Console;
 - preserve existing ranking signals during migration.
+
+The research boundary, keyword map, outstanding client confirmations,
+migration worksheet and launch checklist are maintained in
+[`docs/seo-strategy.md`](docs/seo-strategy.md). Run `python
+scripts/seo_audit.py` after every content or template change.
 
 ## Verified public details used
 - Phone: 0114 242 2733
