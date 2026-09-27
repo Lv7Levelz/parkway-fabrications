@@ -1,0 +1,15 @@
+{
+  "name": "parkway-fabrications-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Parkway Fabrications RFQ API and protected administration",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "test": "node --test --test-reporter=spec backend/test/*.test.js",
+    "check": "node --check backend/server.js && node --check backend/app.js && node --check backend/services/supabase.js && node --check backend/services/email.js && node --check backend/public/admin/admin.js && node --check script.js && python scripts/seo_audit.py",
+    "crawl": "python scripts/seo_audit.py"
+  }
+}

@@ -1,0 +1,26 @@
+name: Parkway checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: npm test
+      - run: npm run check
+      - run: python3 scripts/build_frontend.py --mode staging --api-url https://staging-api.example
+      - run: python3 scripts/seo_audit.py --root dist --mode staging

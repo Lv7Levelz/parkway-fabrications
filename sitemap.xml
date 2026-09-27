@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://example.github.io/parkway-fabrications/</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/laser-cutting.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/granulator-screens.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/perforated-metal.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/fabrication.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/welding.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/bending-folding.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/about.html</loc></url>
-<url><loc>https://example.github.io/parkway-fabrications/contact.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/services.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/laser-cutting.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/fabrication.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/bending-folding.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/welding.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/perforated-metal.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/granulator-screens.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/sectors.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/projects.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/about.html</loc></url>
+  <url><loc>https://www.parkwayfabrications.co.uk/contact.html</loc></url>
 </urlset>

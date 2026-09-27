@@ -257,3 +257,6 @@ footer p{font-size:.84rem;line-height:1.6}
   box-shadow:0 18px 45px rgba(11,29,42,.12);
 }
 .map-embed iframe{display:block}
+
+/* Backend form controls only; original site styles above are unchanged. */
+#quote-form input[type="checkbox"]{width:auto}#quote-form [hidden]{display:none!important}
