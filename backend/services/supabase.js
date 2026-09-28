@@ -40,6 +40,8 @@ export class SupabaseService {
   async getEnquiry(id) { const rows=await this.request(`/rest/v1/enquiries?id=eq.${encodeURIComponent(id)}&select=*,enquiry_files(*)`); return rows[0] || null; }
   async updateStatus(id, status, actorId) { return this.request('/rest/v1/rpc/update_enquiry_status',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_enquiry_id:id,p_status:status,p_actor_id:actorId})}); }
   async getFile(id) { const rows=await this.request(`/rest/v1/enquiry_files?id=eq.${encodeURIComponent(id)}&select=*`); return rows[0] || null; }
+  async listPendingFiles(limit=5) { return this.request(`/rest/v1/enquiry_files?scan_status=eq.PENDING&select=*&order=created_at.asc&limit=${Math.max(1,Math.min(Number(limit)||5,20))}`); }
+  async updateFileScan(id,status) { return this.request(`/rest/v1/enquiry_files?id=eq.${encodeURIComponent(id)}`, { method:'PATCH', headers:{'Content-Type':'application/json',Prefer:'return=minimal'}, body:JSON.stringify({scan_status:status,scan_completed_at:new Date().toISOString()}) }); }
   async downloadFile(path) {
     const response=await this.fetch(`${this.config.supabaseUrl}/storage/v1/object/authenticated/${encodeURIComponent(this.config.storageBucket)}/${encodePath(path)}`,{headers:this.headers()});
     if(!response.ok) throw new Error(`Storage download failed: ${response.status}`); return Buffer.from(await response.arrayBuffer());
