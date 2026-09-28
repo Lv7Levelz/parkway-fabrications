@@ -1,2 +1,2 @@
-/* Deployment may set apiBase to the Render service URL for a split-origin staging site. */
-window.PARKWAY_CONFIG = Object.freeze({ apiBase: '' });
+/* Staging frontend talks to the Render API. Keep this file public-safe: no secrets belong here. */
+window.PARKWAY_CONFIG = Object.freeze({ apiBase: 'https://parkway-fabrications.onrender.com' });
