@@ -22,5 +22,33 @@ jobs:
           python-version: '3.x'
       - run: npm test
       - run: npm run check
+      - run: node --check navigation.js
       - run: python3 scripts/build_frontend.py --mode staging --api-url https://staging-api.example
       - run: python3 scripts/seo_audit.py --root dist --mode staging
+
+  navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --no-save --package-lock=false --ignore-scripts playwright@1.62.1
+      - run: npx playwright install --with-deps chromium
+      - run: python3 scripts/build_frontend.py --mode staging --api-url https://staging-api.example
+      - run: node scripts/test_navigation.cjs
+        env:
+          PARKWAY_TEST_ROOT: dist
+          PARKWAY_SCREENSHOTS: navigation-evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: task-106-branch-navigation
+          path: navigation-evidence/
+      - run: node scripts/probe_staging.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: task-106-current-staging
+          path: staging-evidence/
