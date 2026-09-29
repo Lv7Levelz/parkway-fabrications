@@ -31,7 +31,7 @@ class Structure(HTMLParser):
             self.main_count += 1
         if tag == 'nav' and d.get('id') == 'primary-navigation':
             self.in_nav = True
-        if tag == 'ul' and d.get('class') == 'services-dropdown':
+        if tag == 'ul' and 'services-dropdown' in (d.get('class') or '').split():
             self.in_dropdown = True
         if tag == 'meta' and d.get('name') == 'robots':
             self.robots.append(d.get('content'))
