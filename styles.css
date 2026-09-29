@@ -260,3 +260,74 @@ footer p{font-size:.84rem;line-height:1.6}
 
 /* Backend form controls only; original site styles above are unchanged. */
 #quote-form input[type="checkbox"]{width:auto}#quote-form [hidden]{display:none!important}
+
+/* SEO architecture: original Parkway palette, typography and content layouts. */
+.skip-link{position:fixed;left:16px;top:-100px;z-index:100;background:#fff;color:var(--navy);padding:12px 18px}
+.skip-link:focus{top:12px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue2);outline-offset:4px}
+.navlinks{gap:16px}
+.navlinks [aria-current="page"]{color:#fff;text-decoration:underline;text-underline-offset:7px}
+.services-navigation{display:flex;align-items:center;position:relative;gap:2px}
+.services-disclosure summary{cursor:pointer;list-style:none;display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid transparent}
+.services-disclosure summary::-webkit-details-marker{display:none}
+.services-disclosure[open] summary{border-color:#60717c}
+.services-dropdown{position:absolute;top:100%;left:0;width:260px;margin:0;padding:10px 16px;background:var(--navy);border:1px solid #60717c;list-style:none;box-shadow:0 16px 35px #07131d40;z-index:2}
+.navlinks .services-dropdown a{display:block;padding:12px 0;line-height:1.4}
+.navlinks .services-dropdown a:after{display:none}
+.services-dropdown a:hover{color:#fff;text-decoration:underline}
+.breadcrumbs{padding-top:18px;padding-bottom:18px;font-size:.84rem}
+.breadcrumbs ol{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0}
+.breadcrumbs li+li:before{content:'/';margin-right:10px;color:var(--muted)}
+.breadcrumbs a,.architecture-link-list a,.sector-detail p a,.service-detail-link a,.verification-note a{color:#075aaf;text-decoration:underline;text-underline-offset:3px}
+.verification-note{border-left:3px solid var(--blue);background:#edf5fc;color:#27343c;padding:18px 22px;line-height:1.65;margin:24px 0}
+.architecture-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.architecture-sectors{grid-template-columns:repeat(4,minmax(0,1fr))}
+.architecture-projects{grid-template-columns:repeat(3,minmax(0,1fr))}
+.service-detail-link{grid-column:1/-1;padding:16px 24px;border-top:1px solid var(--line);font-weight:750}
+.product-showcase:nth-child(even) .service-detail-link{order:3}
+.architecture-link-list{display:flex;flex-wrap:wrap;gap:12px 24px;list-style:none;padding:0;margin:20px 0;line-height:1.7}
+.architecture-links p{line-height:1.7;margin-top:18px}
+.sector-detail h2,.capability-detail h2{font-size:1.65rem;line-height:1.15;margin-bottom:18px}
+.sector-detail h3{font-size:1rem;margin-top:24px}
+.sector-detail p,.capability-detail p{line-height:1.65}
+.sector-detail,.capability-detail,#case-study-template{scroll-margin-top:100px}
+.evidence-fields{margin:24px 0}
+.evidence-fields>div{border-top:1px solid var(--line);padding:14px 0}
+.evidence-fields dt{font-weight:750;margin-bottom:6px}
+.evidence-fields dd{margin:0;line-height:1.6;color:var(--muted)}
+.project .concept-label{color:#d4dee5;font-size:.72rem;margin-bottom:10px}
+@media(max-width:1180px){
+ .nav{flex-wrap:wrap}
+ .menu{display:block;min-width:44px;min-height:44px}
+ .navlinks{display:none;position:absolute;top:78px;left:20px;right:20px;flex-direction:column;align-items:stretch;background:var(--navy);padding:16px;border:1px solid #60717c;max-height:calc(100dvh - 140px);overflow-y:auto}
+ .navlinks.open{display:flex}
+ .navlinks a{padding:10px 0;min-height:44px}
+ .navlinks a:after{display:none}
+ .services-navigation{display:block}
+ .services-navigation>a{display:block;margin-right:44px}
+ .services-disclosure{display:block}
+ .services-disclosure summary{position:absolute;right:0;top:0}
+ .services-dropdown{position:static;width:100%;box-shadow:none;margin-top:4px}
+ html:not(.nav-enhanced) .navlinks{display:flex;position:static;order:3;width:100%;max-height:none}
+ html:not(.nav-enhanced) .menu{display:none}
+ .architecture-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .architecture-grid,.architecture-projects{grid-template-columns:1fr}
+ .architecture-sectors{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .architecture-sectors .sector{min-height:170px}
+ .top-left{flex-wrap:wrap;gap:6px 14px;padding:6px 0}
+ .verification-note{padding:16px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* Keep existing desktop card layouts while allowing narrow screens to reflow. */
+.featured-screen-card{display:grid;grid-template-columns:minmax(280px,.8fr) 1.2fr}
+.home-quality-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:650px){
+ h1{font-size:clamp(2.2rem,10vw,3rem);overflow-wrap:break-word}
+ .hero-copy,.page-grid>*{min-width:0}
+ .featured-screen-card,.home-quality-grid{grid-template-columns:1fr}
+ .page-grid input,.page-grid select,.page-grid textarea{min-width:0;max-width:100%}
+ .page-grid .field,.page-grid .form{min-width:0}
+}

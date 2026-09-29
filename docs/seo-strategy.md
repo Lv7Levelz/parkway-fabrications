@@ -1,6 +1,10 @@
 # SEO acquisition strategy and launch gate
 
-_Last updated: 27 September 2026_
+_Original strategy: 27 September 2026; architecture review: 29 September 2026_
+
+> 29 September 2026 update: the architecture review and owner-verification register in [seo-architecture-review.md](seo-architecture-review.md) supersede earlier claims of verified machinery or completed content. The owner questionnaire remains incomplete. Existing technical claims are inherited staging copy and still require sign-off.
+
+
 
 ## Research status and evidence boundary
 

@@ -7,6 +7,7 @@ import re
 import sys
 from argparse import ArgumentParser
 import xml.etree.ElementTree as ET
+from check_architecture import check as check_architecture
 
 parser=ArgumentParser();parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1]);parser.add_argument('--mode',choices=['staging','production'],default='staging');args=parser.parse_args()
 ROOT = args.root
@@ -86,6 +87,8 @@ if args.mode == "production" and "Disallow: /\n" in robots: errors.append("robot
 if args.mode == "production" and "Sitemap: https://www.parkwayfabrications.co.uk/sitemap.xml" not in robots: errors.append("robots.txt has no production sitemap")
 
 if args.mode == "staging" and "Disallow: /\n" not in robots: errors.append("staging robots.txt must block crawling")
+
+errors.extend(check_architecture(ROOT, args.mode))
 
 if errors:
     print("SEO audit failed:\n- " + "\n- ".join(errors)); sys.exit(1)
