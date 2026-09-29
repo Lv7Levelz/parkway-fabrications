@@ -331,3 +331,24 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
  .page-grid input,.page-grid select,.page-grid textarea{min-width:0;max-width:100%}
  .page-grid .field,.page-grid .form{min-width:0}
 }
+
+
+/* Shared dropdown navigation for Services, Sectors and Capabilities. */
+.nav-group{display:flex;align-items:center;position:relative;gap:2px}
+.nav-disclosure summary{cursor:pointer;list-style:none;display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid transparent}
+.nav-disclosure summary::-webkit-details-marker{display:none}
+.nav-disclosure[open] summary{border-color:#60717c}
+.nav-dropdown{position:absolute;top:100%;left:0;width:270px;margin:0;padding:10px 16px;background:var(--navy);border:1px solid #60717c;list-style:none;box-shadow:0 16px 35px #07131d40;z-index:3}
+.navlinks .nav-dropdown a{display:block;padding:12px 0;line-height:1.4}
+.navlinks .nav-dropdown a:after{display:none}
+.nav-dropdown a:hover,.nav-dropdown a:focus-visible{color:#fff;text-decoration:underline}
+@media(min-width:1181px){
+  .nav-group:hover>.nav-disclosure>summary,.nav-group:focus-within>.nav-disclosure>summary{border-color:#60717c}
+}
+@media(max-width:1180px){
+  .nav-group{display:block}
+  .nav-group>a{display:block;margin-right:44px}
+  .nav-disclosure{display:block}
+  .nav-disclosure summary{position:absolute;right:0;top:0}
+  .nav-dropdown{position:static;width:100%;box-shadow:none;margin-top:4px}
+}
